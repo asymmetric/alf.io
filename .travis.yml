@@ -24,7 +24,7 @@ jobs:
         - docker push $DOCKER_USERNAME/alf.io
 
 before_script:
-  - psql -c 'create database alfio;' -U postgres
+  - [[ -n $(command -v psql) ]] && psql -c 'create database alfio;' -U postgres
 script:
   - TERM=dumb ./gradlew build jacocoTestReport $PROFILE
 after_success:
