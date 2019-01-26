@@ -3,7 +3,7 @@ dist: xenial
 sudo: required
 install:
   - TERM=dumb ./gradlew -q assemble
-matrix:
+jobs:
   include:
     - name: postgresql 9.6
       jdk: oraclejdk11
@@ -15,6 +15,13 @@ matrix:
       env: PROFILE="-Dspring.profiles.active=travis -Ddbenv=PGSQL-TRAVIS -Dpgsql10"
       addons:
         postgresql: "10"
+    - stage: build docker image
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t alf.io .
+        - docker images
+        - docker tag alf.io $DOCKER_USERNAME/alf.io
+        - docker push $DOCKER_USERNAME/alf.io
 
 before_script:
   - psql -c 'create database alfio;' -U postgres
