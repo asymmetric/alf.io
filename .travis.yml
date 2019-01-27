@@ -30,7 +30,7 @@ jobs:
     - stage: build docker image
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t alf.io -f src/main/dist/Dockerfile src/main/dist
+        - docker build -t alf.io .
         - docker images
         - docker tag alf.io $DOCKER_USERNAME/alf.io
         - docker push $DOCKER_USERNAME/alf.io
